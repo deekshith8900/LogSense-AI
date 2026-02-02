@@ -25,8 +25,7 @@ if st.sidebar.button("🔄 Run Ingestion Pipeline"):
     with st.spinner("Ingesting and processing logs..."):
         if not os.path.exists(log_file_path):
             st.sidebar.error("Log file not found! Run generator first.")
-        elif not os.getenv("OPENAI_API_KEY"):
-            st.sidebar.error("OPENAI_API_KEY not set.")
+        # No API Key needed for ingestion (Local Embeddings)
         else:
             try:
                 run_pipeline(log_file_path, index_path)
@@ -52,8 +51,8 @@ with col1:
             st.warning("Please enter a query.")
         elif not os.path.exists(index_path):
             st.error("No index found. Please run ingestion first.")
-        elif not os.getenv("OPENAI_API_KEY"):
-            st.error("Missing OpenAI API Key.")
+        elif not os.getenv("OPENROUTER_API_KEY"):
+            st.error("Missing OPENROUTER_API_KEY.")
         else:
             with st.spinner("Analyzing logs with AI..."):
                 rag = RAGEngine(index_path=index_path)

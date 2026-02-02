@@ -33,10 +33,10 @@ def run_pipeline(log_file, index_path):
     # 3. Vector Storage
     vector_store = LogVectorStore(index_path=index_path)
     
-    # Check for OpenAI Key
-    if not os.getenv("OPENAI_API_KEY"):
-        logger.error("OPENAI_API_KEY not found. Cannot generate embeddings.")
-        return
+    # Check for OpenAI Key - No longer needed for Phase 2 as we use Local Embeddings
+    # if not os.getenv("OPENAI_API_KEY"):
+    #    logger.error("OPENAI_API_KEY not found. Cannot generate embeddings.")
+    #    return
 
     vector_store.add_texts(chunks)
     vector_store.save()

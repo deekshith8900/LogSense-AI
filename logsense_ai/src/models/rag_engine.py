@@ -14,9 +14,18 @@ class RAGEngine:
         # Load the index (must exist)
         self.vector_store.load()
         
-        # Initialize LLM
-        # Usage depends on OPENAI_API_KEY being set
-        self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+        # Initialize LLM with OpenRouter
+        # Usage depends on OPENROUTER_API_KEY being set
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+             self.logger.warning("OPENROUTER_API_KEY not found. LLM search will fail.")
+        
+        self.llm = ChatOpenAI(
+            model_name="mistralai/mistral-7b-instruct:free", # Using a free model on OpenRouter
+            temperature=0,
+            openai_api_key=api_key,
+            openai_api_base="https://openrouter.ai/api/v1"
+        )
         
         self.prompt_template = PromptTemplate(
             input_variables=["logs", "question"],

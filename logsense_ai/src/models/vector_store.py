@@ -1,16 +1,18 @@
 import os
 import logging
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 class LogVectorStore:
     """
     Manages embedding generation and vector storage using FAISS.
+    Uses HuggingFace (Local) embeddings to avoid OpenAI costs.
     """
-    def __init__(self, index_path="data/processed/faiss_index"):
+    def __init__(self, index_path="logsense_ai/data/processed/faiss_index"):
         self.logger = logging.getLogger(__name__)
         self.index_path = index_path
-        self.embeddings = OpenAIEmbeddings()
+        # Use a lightweight local model
+        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.vector_store = None
 
     def add_texts(self, texts, metadatas=None):

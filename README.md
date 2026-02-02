@@ -38,7 +38,8 @@ graph TD
 
 - **Language**: Python 3.10+
 - **Frontend**: Streamlit
-- **LLM & Embeddings**: OpenAI API (LangChain)
+- **LLM**: OpenRouter (DeepSeek/Mistral/Llama)
+- **Embeddings**: HuggingFace (Local/Free)
 - **Vector Database**: FAISS
 - **Containerization**: Docker
 
@@ -46,7 +47,7 @@ graph TD
 
 ### Prerequisites
 - Python 3.10+ OR Docker
-- OpenAI API Key
+- OpenRouter API Key (for LLM Analysis)
 
 ### Option 1: Local Setup
 
@@ -60,12 +61,12 @@ graph TD
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
-   pip install -r logsense_ai/requirements.txt
+   pip install -r requirements.txt
    ```
 
 3. **Configure API Key**
    ```bash
-   export OPENAI_API_KEY="your-sk-key-here"
+   export OPENROUTER_API_KEY="your-sk-or-v1-key-here"
    ```
 
 4. **Run the Application**
@@ -82,7 +83,7 @@ graph TD
 
 2. **Run the Container**
    ```bash
-   docker run -p 8501:8501 -e OPENAI_API_KEY="your-sk-key-here" logsense-ai
+   docker run -p 8501:8501 -e OPENROUTER_API_KEY="your-key" logsense-ai
    ```
 
 ## 📖 Usage Guide
