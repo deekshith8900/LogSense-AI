@@ -1,0 +1,10 @@
+pandas
+faker
+watchdog
+python-dotenv
+openai
+langchain
+langchain-openai
+faiss-cpu
+streamlit
+tiktoken
