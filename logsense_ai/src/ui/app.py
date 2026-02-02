@@ -129,4 +129,4 @@ with col2:
         st.error("Log Source Missing")
         if st.button("Generate Initial Logs"):
              generate_sample_logs(200)
-             st.experimental_rerun()
+             st.rerun()
