@@ -4,6 +4,8 @@ watchdog
 python-dotenv
 openai
 langchain
+langchain-community
+langchain-text-splitters
 langchain-openai
 faiss-cpu
 streamlit
