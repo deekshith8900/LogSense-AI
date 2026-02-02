@@ -21,12 +21,61 @@ st.sidebar.header("⚙️ Data Ingestion")
 log_file_path = "logsense_ai/data/raw/app.log"
 index_path = "logsense_ai/data/processed/faiss_index"
 
-if st.sidebar.button("🔄 Run Ingestion Pipeline"):
-    with st.spinner("Ingesting and processing logs..."):
-        if not os.path.exists(log_file_path):
-            st.sidebar.error("Log file not found! Run generator first.")
-        # No API Key needed for ingestion (Local Embeddings)
-        else:
+# Ensure directories exist
+os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+
+# Helper for generation (simplified version of generate_logs.py)
+def generate_sample_logs(count=100):
+    import random
+    import json
+    from datetime import datetime
+    
+    logs = []
+    services = ["checkout-service", "auth-service", "payment-gateway", "inventory-db"]
+    levels = ["INFO", "WARN", "ERROR"]
+    
+    for _ in range(count):
+        service = random.choice(services)
+        level = random.choices(levels, weights=[70, 20, 10], k=1)[0]
+        timestamp = datetime.now().isoformat()
+        
+        entry = {
+            "timestamp": timestamp,
+            "service": service,
+            "level": level,
+            "message": "Sample message",
+        }
+        
+        if level == "ERROR":
+            if service == "payment-gateway":
+                entry["message"] = "Payment declined: Gateway Timeout (504)"
+            elif service == "inventory-db":
+                entry["message"] = "ConnectionRefusedError: max connections reached"
+                entry["stack_trace"] = "Traceback (most recent call last)...\n  File 'db.py', line 42"
+        elif level == "INFO":
+            entry["message"] = f"Action successful for user_{random.randint(100,999)}"
+            
+        logs.append(json.dumps(entry))
+        
+    with open(log_file_path, "w") as f:
+        f.write("\n".join(logs))
+    return len(logs)
+
+st.sidebar.markdown("---")
+# Log Generation Button
+if not os.path.exists(log_file_path):
+    st.sidebar.warning("🚫 No Log Data Found")
+    if st.sidebar.button("🎲 Generate Sample Logs"):
+        with st.spinner("Generating simulated logs..."):
+            count = generate_sample_logs(200)
+            st.sidebar.success(f"Generated {count} logs!")
+else:
+    if st.sidebar.button("➕ Generate More Logs"):
+         generate_sample_logs(50)
+         st.sidebar.success("Added 50 new logs.")
+    if st.sidebar.button("🔄 Run Ingestion Pipeline"):
+        with st.spinner("Ingesting and processing logs..."):
+            # No API Key needed for ingestion (Local Embeddings)
             try:
                 run_pipeline(log_file_path, index_path)
                 st.sidebar.success("Ingestion Complete! specific Index updated.")
@@ -78,3 +127,6 @@ with col2:
                 st.code("".join(lines[-10:]))
     else:
         st.error("Log Source Missing")
+        if st.button("Generate Initial Logs"):
+             generate_sample_logs(200)
+             st.experimental_rerun()
